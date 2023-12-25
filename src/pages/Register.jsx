@@ -4,12 +4,14 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { auth, db, storage } from '../firebase'
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore"; 
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
 
     const [err, setErr] = useState(false)
-    const handleSunmit = async (e) => {
+    const navigate = useNavigate()  
 
+    const handleSunmit = async (e) => {
       e.preventDefault()
       const displayName = e.target[0].value;
       const email = e.target[1].value;
@@ -42,6 +44,9 @@ uploadTask.on(
         email,
         photoURL: downloadURL,
       });
+
+      await setDoc(doc(db, "userChats", res.user.uid), {});
+      navigate('/')
     });
   }
 );
